@@ -1,0 +1,86 @@
+drop table if exists Account;
+create table Account(
+AccNo bigint NOT NULL UNIQUE,
+AccName varchar(30),
+balance float
+
+);
+
+INSERT INTO Account values(14,'Nishanth',100);
+INSERT INTO Account values(23,'Rohith',100);
+
+
+drop table if exists Passbook;
+drop table if exists Transaction;
+create table Transaction (
+transid int NOT NULL,
+AccNo bigint NOT NULL,
+DbAcc bigint,
+CrAcc bigint,
+trtype varchar(10),
+Tramt FLOAT,
+tdesc varchar(30),
+trdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+currbalance FLOAT,
+PRIMARY KEY(transid,AccNo),
+FOREIGN KEY(AccNo) REFERENCES Account(AccNo)
+);
+
+
+INSERT INTO Transaction values(1,14,14,23,'db',100,'family','2022-04-01 00:00:00',1000);
+INSERT INTO Transaction values(1,23,14,23,'cr',100,'family','2022-04-10 00:00:00',1400);
+
+
+
+
+SELECT * FROM myTable 
+WHERE myField BETWEEN DATE'2012-10-01' AND DATE'2012-10-30' 
+AND CAST(myField AS TIME) BETWEEN TIME'00:00:00' AND TIME'17:00:00'
+
+
+SELECT * FROM Transaction
+WHERE trdate BETWEEN DATE '2021-01-01' AND DATE'2021-12-31' 
+
+
+SELECT * FROM Transaction
+WHERE (DbAcc=14 or CrAcc=14) and (trdate BETWEEN DATE '2022-01-01' AND DATE'2022-12-31' )
+
+
+
+drop table if exists Passbook;
+drop table if exists Transaction;
+create table project_transaction(
+transid int NOT NULL,
+DbAcc int,
+CrAcc int,
+trtype varchar(10),
+Tramt FLOAT,
+tdesc varchar(30),
+trdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+DbAccCurrbalance FLOAT,
+CrAccCurrbalance FLOAT,
+PRIMARY KEY(transid),
+FOREIGN KEY(DbAcc) REFERENCES project_account(account_number)
+);
+
+drop table if exists Account;
+create table project_account(
+account_number int NOT NULL UNIQUE,
+AccName varchar(30),
+current_balance float
+);
+
+
+INSERT INTO project_account values(14,'Nishanth',100);
+INSERT INTO project_account values(23,'Rohith',100);
+
+
+INSERT INTO project_transaction values(1,14,23,'db',100,'family','2022-04-01 00:00:00',900,1100);
+INSERT INTO project_transaction values(2,23,14,'cr',100,'family','2022-04-10 00:00:00',1000,1000);
+INSERT INTO project_transaction values(3,14,23,'cr',10000,'family','2022-04-10 00:00:00',1000,1000);
+INSERT INTO project_transaction values(4,23,05,'cr',10000,'family','2022-04-10 00:00:00',1000,1000);
+
+
+
+SELECT * FROM Transaction T,Account A
+WHERE (T.debitAccountNumber=A.accountNumber or T.creditAccountNumber=A.accountNumber) and (T.trdate BETWEEN fromDateCorrect AND toDateCorrect )

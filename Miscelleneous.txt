@@ -1,1 +1,226 @@
 https://stackoverflow.com/questions/23101260/ignore-fields-from-java-object-dynamically-while-sending-as-json-from-spring-mvc
+
+
+
+package com.sbi.demo.layer2;
+
+import java.sql.Timestamp;
+
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.springframework.stereotype.Component;
+
+@Component @Entity @Table(name="project_transaction")
+public class Transaction {
+	
+	
+//	@EmbeddedId
+//	private TransactionPrimaryKey trnPKey;
+//	
+	@Id
+	@GeneratedValue
+	@Column(name="transid")
+	private int transactionId;
+//	
+//	@Column(name="AccNo")
+//	private long accountNumber;
+	
+	@ManyToOne(targetEntity = Account.class,fetch = FetchType.EAGER)
+	@JoinColumn(name="account_number")
+	
+	private int debitAccountNumber;
+	
+	@Column(name="CrAcc")
+	private int creditAccountNumber;
+	
+	@Column(name="trtype")
+	private String trnType;
+	
+	@Column(name="Tramt")
+	private float trnAmount;
+	
+	@Column(name="tdesc")
+	private String trnDescription;
+	
+	@Column(name="trdate")
+	private Timestamp trnDateTime;
+	
+	@Column(name="DbAccCurrbalance")
+	private Float DbAccCurrentBalance;
+	
+	@Column(name="CrAccCurrbalance")
+	private Float CrAccCurrbalance;
+	
+//	public TransactionPrimaryKey getTrnPKey() {
+//		return trnPKey;
+//	}
+//
+//	public void setTrnPKey(TransactionPrimaryKey trnPKey) {
+//		this.trnPKey = trnPKey;
+//	}
+
+	public int getDebitAccountNumber() {
+		return debitAccountNumber;
+	}
+
+	public void setDebitAccountNumber(int debitAccountNumber) {
+		this.debitAccountNumber = debitAccountNumber;
+	}
+
+	public int getCreditAccountNumber() {
+		return creditAccountNumber;
+	}
+
+	public void setCreditAccountNumber(int creditAccountNumber) {
+		this.creditAccountNumber = creditAccountNumber;
+	}
+
+	public String getTrnType() {
+		return trnType;
+	}
+
+	public void setTrnType(String trnType) {
+		this.trnType = trnType;
+	}
+
+	public float getTrnAmount() {
+		return trnAmount;
+	}
+
+	public void setTrnAmount(float trnAmount) {
+		this.trnAmount = trnAmount;
+	}
+
+	public String getTrnDescription() {
+		return trnDescription;
+	}
+
+	public void setTrnDescription(String trnDescription) {
+		this.trnDescription = trnDescription;
+	}
+
+	public Timestamp getTrnDateTime() {
+		return trnDateTime;
+	}
+
+	public void setTrnDateTime(Timestamp trnDateTime) {
+		this.trnDateTime = trnDateTime;
+	}
+
+	public int getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public Float getDbAccCurrentBalance() {
+		return DbAccCurrentBalance;
+	}
+
+	public void setDbAccCurrentBalance(Float dbAccCurrentBalance) {
+		DbAccCurrentBalance = dbAccCurrentBalance;
+	}
+
+	public Float getCrAccCurrbalance() {
+		return CrAccCurrbalance;
+	}
+
+	public void setCrAccCurrbalance(Float crAccCurrbalance) {
+		CrAccCurrbalance = crAccCurrbalance;
+	}
+
+//	public float getCurrentBalance() {
+//		return currentBalance;
+//	}
+//
+//	public void setCurrentBalance(float currentBalance) {
+//		this.currentBalance = currentBalance;
+//	}
+	
+
+	
+
+}
+
+
+
+
+
+package com.sbi.demo.layer2;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.springframework.stereotype.Component;
+
+@Component @Entity @Table(name="project_account")
+public class Account {
+	
+	@Id
+	@GeneratedValue
+	@Column(name="account_number")
+	private int accountNumber;
+	
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(int accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	public float getAccountBalance() {
+		return accountBalance;
+	}
+
+	public void setAccountBalance(float accountBalance) {
+		this.accountBalance = accountBalance;
+	}
+
+	public List<Transaction> getAccountTrns() {
+		return accountTrns;
+	}
+
+	public void setAccountTrns(List<Transaction> accountTrns) {
+		this.accountTrns = accountTrns;
+	}
+
+	@Column(name="AccName")
+	private String accountName;
+	
+	@Column(name="current_balance")
+	private float accountBalance;
+	
+	@OneToMany(mappedBy = "debitAccountNumber")
+	private List<Transaction> accountTrns;
+	
+	
+
+
+	
+}
